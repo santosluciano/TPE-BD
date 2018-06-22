@@ -1,0 +1,163 @@
+html{
+  height:100%;
+  width:100%;
+}
+
+body{
+  background: url(https://fondosdepantallaymuchomas.files.wordpress.com/2014/09/9448c-142.jpg) no-repeat center center fixed ;
+  background-size: cover;
+}
+
+nav.navbar,.dropdown-menu {
+    background-color: #5A86F1;
+}
+
+.dropdown-menu li a.celulares:hover{
+  color: black;
+}
+nav.navbar ul.nav li a,.formlogin,nav.navbar a.navbar-brand{
+    color: white;
+}
+
+h1{
+  text-align: center;
+  color: 	white;
+  text-shadow: 3px 3px 2px grey;
+}
+
+.contieneCelular{
+  background-color: grey;
+  text-align: center;
+}
+
+#tarjetas{
+  margin-top: 65px;
+  height: 80px;
+  width: 1200px;
+}
+.tarjeta-celular{
+  position: relative;
+  top: 50px;
+}
+.footer{
+  background-color: grey;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 25px;
+  color: white;
+  text-align: center;
+}
+.nav-stacked,.nota{
+  text-align: center;
+  top: 50px;
+}
+.panel-admin{
+  background-color: white;
+}
+.precio-celular{
+  margin-top:0px;
+}
+.estadisticasCelular{
+  position: relative;
+  top: 20px;
+  margin-bottom: 40px;
+}
+#antutu{
+  text-align: center;
+}
+.carga{
+  display: inline-block;
+  width: 100%;
+  line-height: inherit;
+}
+.tab-content{
+  margin-top: 20px;
+}
+.panel {
+position:relative;
+}
+.panel>.panel-heading:after,.panel>.panel-heading:before{
+position:absolute;
+top:11px;left:-16px;
+right:100%;
+width:0;
+height:0;
+display:block;
+content:" ";
+border-color:transparent;
+border-style:solid solid outset;
+pointer-events:none;
+}
+.panel>.panel-heading:after{
+border-width:7px;
+border-right-color:#f7f7f7;
+margin-top:1px;
+margin-left:2px;
+}
+.panel>.panel-heading:before{
+border-right-color:#ddd;
+border-width:8px;
+}
+.nota-user{
+  position: relative;
+  float: right;
+  top: 3px;
+}
+.contenedor-usuario{
+  margin-top: 60px;
+}
+.img-perfil{
+  margin-top: 20px;
+  height: 150px;
+  width: 150px;
+}
+.nombre-perfil{
+  text-align: center;
+}
+.btn-review{
+  margin-bottom: 15px;
+}
+.minicelular .active{
+  border: blue;
+}
+.btn-admin{
+  margin: 5px;
+  display: block;
+  text-align: center;
+}
+/**Sistema de rating por estrellas **/
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
+/****** Style Star Rating Widget *****/
+.puntaje { 
+  border: none;
+  float: left;
+}
+.puntaje > input { display: none; } 
+.puntaje > label:before { 
+  margin: 5px;
+  font-size: 1.25em;
+  font-family: FontAwesome;
+  display: inline-block;
+  content: "\f005";
+}
+.puntaje > .half:before { 
+  content: "\f089";
+  position: absolute;
+}
+.full:hover{
+  cursor: pointer;
+}
+.puntaje > label { 
+  color: #ddd; 
+ float: right; 
+}
+/***** CSS Magic to Highlight Stars on Hover *****/
+.puntaje > input:checked ~ label, /* show gold star when clicked */
+.puntaje:not(:checked) > label:hover, /* hover current star */
+.puntaje:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+.puntaje > input:checked + label:hover, /* hover current star when changing rating */
+.puntaje > input:checked ~ label:hover,
+.puntaje > label:hover ~ input:checked ~ label, /* lighten current selection */
+.puntaje > input:checked ~ label:hover ~ label { color: #FFED85;  } 
