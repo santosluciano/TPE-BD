@@ -241,6 +241,7 @@ ALTER TABLE GR02_Persona ADD CONSTRAINT FK_GR02_Persona_Tipo_Doc
     INITIALLY IMMEDIATE
 ;
 
+
 --Insertar Datos
 --Tipos Documentos GR02_Tipo_Doc
 INSERT INTO GR02_Tipo_Doc(Nombre) Values('DNI');

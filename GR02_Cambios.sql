@@ -4,13 +4,13 @@ alter table gr02_reserva add constraint chk_fecha check(
 );
 -----------------------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que un depto no tenga mas habitaciones que las que permite el mismo
-CREATE ASSERTION CK_Cantidad_Habitaciones
+/*CREATE ASSERTION CK_Cantidad_Habitaciones
 CHECK (NOT EXISTS
 (SELECT 1
 FROM gr02_departamento d 
  	JOIN gr02_tipo_dpto td ON (td.id_tipo_depto = d.id_tipo_depto)
  	WHERE td.cant_habitaciones < (SELECT COUNT(*) FROM gr02_habitacion h
-								  		WHERE h.id_dpto = d.id_dpto)));
+								  		WHERE h.id_dpto = d.id_dpto)));*/
 --Restriccion implementada
 create or replace function fn_cantidad_habitaciones() returns trigger as $$
 begin
@@ -25,36 +25,15 @@ begin
 return new;
 end; $$ language plpgsql;
 
-create trigger TR_Cantidad_Habitaciones 
-after insert or update of id_dpto on gr02_Habitacion 
-for each row  execute procedure fn_cantidad_habitaciones();
-
-create trigger TR_Cantidad_Habitaciones2
-after update of id_tipo_depto on gr02_Departamento
-for each row execute procedure fn_cantidad_habitaciones();
------------------------------------------------------------------------------------------
---Restriccion declarativa que controla que la cantidad de huespedes no exceda la cantidad maxima del departamento
-CREATE ASSERTION CK_Cantidad_Huespedes
-CHECK (NOT EXISTS
-(select r.* 
-	from gr02_reserva r
-	join gr02_departamento d on (r.id_dpto = d.id_dpto)
-	join gr02_tipo_dpto td on (td.id_tipo_depto = d.id_tipo_depto)
-	where td.cant_max_huespedes < (select count(*) 
-								   		from gr02_huesped_reserva hr
-								  		where hr.id_reserva = r.id_reserva)));
---Restriccion implementada, tengo que conciderar ademas con otra funcion si cambio el tipo_depto o del depto                                       
-create or replace function fn_cantidad_huespedes() returns trigger as $$
+create or replace function fn_cantidad_habitaciones_tipo() returns trigger as $$
 begin
-	if(exists (select r.* 
-	from gr02_reserva r
-	join gr02_departamento d on (r.id_dpto = d.id_dpto)
-	join gr02_tipo_dpto td on (td.id_tipo_depto = d.id_tipo_depto)
-	where new. 
-        td.cant_max_huespedes < (select count(*) 
-								   		from gr02_huesped_reserva hr
-								  		where hr.id_reserva = r.id_reserva))) then
-		raise exception 'La cantidad de huespedes excede el maximo de la habitacion';
+	if(exists (select 1
+		FROM gr02_departamento d 
+ 			JOIN gr02_tipo_dpto td ON (td.id_tipo_depto = d.id_tipo_depto)
+ 			WHERE d.id_tipo_depto = new.id_tipo_depto and
+		  		td.cant_habitaciones < (SELECT COUNT(*) FROM gr02_habitacion h
+								  			WHERE h.id_dpto = d.id_dpto))) then
+		raise exception 'Hay un departamento con mas habitaciones que el maximo';
 	end if;
 return new;
 end; $$ language plpgsql;
@@ -66,3 +45,70 @@ for each row  execute procedure fn_cantidad_habitaciones();
 create trigger TR_Cantidad_Habitaciones2
 after update of id_tipo_depto on gr02_Departamento
 for each row execute procedure fn_cantidad_habitaciones();
+
+create trigger TR_Cantidad_Habitaciones_tipo
+after update of cant_habitaciones on gr02_tipo_dpto
+for each row execute procedure fn_cantidad_habitaciones_tipo();
+
+--FALTA EN CASO DE ACTUALIZAR CANT_HABITACIONES EN TIPO_DPTO
+
+-----------------------------------------------------------------------------------------
+--Restriccion declarativa que controla que la cantidad de huespedes no exceda la cantidad maxima del departamento
+/*CREATE ASSERTION CK_Cantidad_Huespedes
+CHECK (NOT EXISTS
+(select r.* 
+	from gr02_reserva r
+	join gr02_departamento d on (r.id_dpto = d.id_dpto)
+	join gr02_tipo_dpto td on (td.id_tipo_depto = d.id_tipo_depto)
+	where td.cant_max_huespedes < (select count(*) 
+								   		from gr02_huesped_reserva hr
+								  		where hr.id_reserva = r.id_reserva)));*/
+--Restriccion implementada, tengo que conciderar ademas con otra funcion si cambio el tipo_depto o del depto                                       
+create or replace function fn_cantidad_huespedes() returns trigger as $$
+begin
+	if(exists (select r.* 
+	from gr02_reserva r
+	join gr02_departamento d on (r.id_dpto = d.id_dpto)
+	join gr02_tipo_dpto td on (td.id_tipo_depto = d.id_tipo_depto)
+	where new.id_reserva = r.id_reserva and 
+        td.cant_max_huespedes < (select count(*) 
+								   		from gr02_huesped_reserva hr
+								  		where hr.id_reserva = r.id_reserva))) then
+		raise exception 'La cantidad de huespedes excede el maximo de la habitacion';
+	end if;
+return new;
+end; $$ language plpgsql;
+
+create or replace function fn_cantidad_huespedes_max() returns trigger as $$
+begin
+	if(exists (select r.* 
+	from gr02_reserva r
+	join gr02_departamento d on (r.id_dpto = d.id_dpto)
+	join gr02_tipo_dpto td on (td.id_tipo_depto = d.id_tipo_depto)
+	where new.id_tipo_depto = td.id_tipo_depto and 
+        td.cant_max_huespedes < (select count(*) 
+								   		from gr02_huesped_reserva hr
+								  		where hr.id_reserva = r.id_reserva))) then
+		raise exception 'La cantidad de huespedes de una reserva excede el maximo';
+	end if;
+return new;
+end; $$ language plpgsql;
+
+create trigger TR_Cantidad_huespedes 
+after insert or update of id_reserva on gr02_huesped_reserva 
+for each row  execute procedure fn_cantidad_huespedes();
+
+create trigger TR_Cantidad_huespedes2 
+after update of id_dpto on gr02_reserva
+for each row  execute procedure fn_cantidad_huespedes();
+
+create trigger TR_Cantidad_huespedes_max1 
+after update of id_tipo_depto on gr02_departamento
+for each row  execute procedure fn_cantidad_huespedes_max();
+
+create trigger TR_Cantidad_huespedes_max2
+after update of cant_max_huespedes on gr02_tipo_dpto
+for each row  execute procedure fn_cantidad_huespedes_max();
+
+-------------------------------------------------------------------------------------------------
+
