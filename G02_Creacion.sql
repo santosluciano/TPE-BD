@@ -29,6 +29,7 @@ CREATE TABLE GR02_Departamento (
     nro_doc decimal(11,0)  NOT NULL,
     precio_noche decimal(10,2)  NOT NULL,
     costo_limpieza decimal(10,2)  NOT NULL,
+    ciudad varchar(80) NOT NULL,
     CONSTRAINT PK_GR02_Departamento PRIMARY KEY (id_dpto)
 );
 
@@ -274,15 +275,15 @@ INSERT INTO GR02_Persona(tipo_doc, nro_doc, apellido, nombre, fecha_nac, e_mail)
     Values(1, 26243466, 'Lescano', 'Pablo', '1977-12-08', 'pablitolescano@gmail.com');
 --Departamentos GR02_Departamento
 INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
-    VALUES(1,'Linda vista al mar',50,1,1,36626800,800,100);
+    VALUES(1,'Linda vista al mar',50,1,1,36626800,800,100,'Mar del Plata');
 INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
-    VALUES(2,'Habitaciones grandes',90,2,1,36328314,1000,150);
+    VALUES(2,'Habitaciones grandes',90,2,1,36328314,1000,150,'Bariloche');
 INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
-    VALUES(3,'Cocina moderna',80,3,1,16713110,1000,150);
+    VALUES(3,'Cocina moderna',80,3,1,16713110,1000,150,'Villa San Carlos');
 INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
-    VALUES(4,'Comedor grande',120,4,1,22334502,1200,200);
+    VALUES(4,'Comedor grande',120,4,1,22334502,1200,200,'Misiones');
 INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
-    VALUES(5,'Ideal para estudiantes',40,5,1,26243466,600,70);
+    VALUES(5,'Ideal para estudiantes',40,5,1,26243466,600,70,'Caracas');
 --Habitaciones GR02_Habitacion
 --Habitaciones Departamento 1
 INSERT INTO GR02_Habitacion (id_dpto,id_habitacion,posib_camas_simples,posib_camas_dobles,posib_camas_kind,tv,sillon,frigobar,mesa,sillas,cocina)

@@ -51,6 +51,19 @@ after update of cant_habitaciones on gr02_tipo_dpto
 for each row execute procedure fn_cantidad_habitaciones_tipo();
 
 --FALTA EN CASO DE ACTUALIZAR CANT_HABITACIONES EN TIPO_DPTO
+------------------------------------------------------------------------------------------------
+--Restriccion declarativa que controla que tanto la persona que realiza la reserva como los huéspedes no sea el propietario del departamento
+/*CREATE ASSERTION CK_Cantidad_Habitaciones
+CHECK (NOT EXISTS
+(SELECT *
+	FROM gr02_reserva r 
+ 	JOIN gr02_huesped_reserva hr ON (hr.id_reserva = r.id_reserva)
+ 	WHERE exists(select 1 
+				 	from gr02_departamento d 
+				 	where (d.id_dpto = r.id_dpto) and ((d.tipo_doc = r.tipo_doc and d.nro_doc = r.nro_doc) 
+				 		OR (d.tipo_doc = hr.tipo_doc and d.nro_doc = hr.nro_doc))))); 
+*/
+
 
 -----------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que la cantidad de huespedes no exceda la cantidad maxima del departamento
@@ -111,4 +124,14 @@ after update of cant_max_huespedes on gr02_tipo_dpto
 for each row  execute procedure fn_cantidad_huespedes_max();
 
 -------------------------------------------------------------------------------------------------
+--VISTAS
+--Devuelve un listado con los departamentos ordenados por ciudad y por mejor rating (estrellas)
+CREATE VIEW DEPTO_CIUDAD_RATING  AS
+  SELECT d.*,avg(c.estrellas) as rating
+	FROM GR02_Departamento d
+	JOIN GR02_Reserva r ON (r.id_dpto = d.id_dpto)
+	JOIN GR02_Huesped_Reserva hr ON (hr.id_reserva = r.id_reserva)
+	JOIN GR02_Comentario c ON (c.id_reserva = hr.id_reserva)
+	GROUP BY d.id_dpto	
+	ORDER BY ciudad,rating desc
 
