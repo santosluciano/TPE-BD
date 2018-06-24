@@ -55,7 +55,7 @@ for each row execute procedure fn_cantidad_habitaciones_tipo();
 --Restriccion declarativa que controla que tanto la persona que realiza la reserva como los huéspedes no sea el propietario del departamento
 /*CREATE ASSERTION CK_Cantidad_Habitaciones
 CHECK (NOT EXISTS
-(SELECT *
+(SELECT 1
 	FROM gr02_reserva r 
  	JOIN gr02_huesped_reserva hr ON (hr.id_reserva = r.id_reserva)
  	WHERE exists(select 1 
@@ -63,7 +63,30 @@ CHECK (NOT EXISTS
 				 	where (d.id_dpto = r.id_dpto) and ((d.tipo_doc = r.tipo_doc and d.nro_doc = r.nro_doc) 
 				 		OR (d.tipo_doc = hr.tipo_doc and d.nro_doc = hr.nro_doc))))); 
 */
+--Restriccion implementada                                       
+create or replace function fn_reserva_huespedes_no_propietarios() returns trigger as $$
+begin
+	if(exists (SELECT 1
+				FROM gr02_reserva r 
+ 				LEFT JOIN gr02_huesped_reserva hr ON (hr.id_reserva = r.id_reserva)
+ 				WHERE exists(select 1 
+				 				from gr02_departamento d 
+				 				where (r.id_reserva = new.id_reserva)
+							 		and(d.id_dpto = r.id_dpto) 
+							 		and ((d.tipo_doc = r.tipo_doc and d.nro_doc = r.nro_doc) 
+				 					or (d.tipo_doc = hr.tipo_doc and d.nro_doc = hr.nro_doc))))) then
+		raise exception 'No se puede hacer la reserva, un huesped o el que hace la reserva es propietario';
+	end if;
+return new;
+end; $$ language plpgsql;
 
+create trigger TR_reserva_no_propietario 
+after insert or update of tipo_doc, nro_doc on gr02_reserva 
+for each row  execute procedure fn_reserva_huespedes_no_propietarios();
+
+create trigger TR_huesped_reserva_no_propietario 
+after insert or update of id_reserva on gr02_huesped_reserva 
+for each row  execute procedure fn_reserva_huespedes_no_propietarios();
 
 -----------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que la cantidad de huespedes no exceda la cantidad maxima del departamento
@@ -76,6 +99,7 @@ CHECK (NOT EXISTS
 	where td.cant_max_huespedes < (select count(*) 
 								   		from gr02_huesped_reserva hr
 								  		where hr.id_reserva = r.id_reserva)));*/
+
 --Restriccion implementada, tengo que conciderar ademas con otra funcion si cambio el tipo_depto o del depto                                       
 create or replace function fn_cantidad_huespedes() returns trigger as $$
 begin
@@ -122,6 +146,9 @@ for each row  execute procedure fn_cantidad_huespedes_max();
 create trigger TR_Cantidad_huespedes_max2
 after update of cant_max_huespedes on gr02_tipo_dpto
 for each row  execute procedure fn_cantidad_huespedes_max();
+
+-------------------------------------------------------------------------------------------------
+--SERVICIOS
 
 -------------------------------------------------------------------------------------------------
 --VISTAS
