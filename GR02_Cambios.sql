@@ -2,12 +2,12 @@
 ALTER TABLE gr02_reserva ADD CONSTRAINT chk_fecha CHECK(
    fecha_desde < fecha_hasta
 );
---INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
---    VALUES(8,'2017-12-01','2018-07-01','2018-04-01','Telefonica',1,800,1,1,26243466);
---el nuevo registro para la relación «gr02_reserva» viola la restricción «check» «chk_fecha»
---UPDATE GR02_Reserva SET fecha_desde = '2018-02-02' WHERE id_reserva = 1
---el nuevo registro para la relación «gr02_reserva» viola la restricción «check» «chk_fecha»
-
+/*INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
+    VALUES(8,'2017-12-01','2018-07-01','2018-04-01','Telefonica',1,800,1,1,26243466);
+el nuevo registro para la relación «gr02_reserva» viola la restricción «check» «chk_fecha»
+UPDATE GR02_Reserva SET fecha_desde = '2018-02-02' WHERE id_reserva = 1
+el nuevo registro para la relación «gr02_reserva» viola la restricción «check» «chk_fecha»,
+porque la fecha de fin de reserva es '2018-02-01'*/
 -----------------------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que un depto no tenga mas habitaciones que las que permite el mismo
 /*CREATE ASSERTION CK_Cantidad_Habitaciones
@@ -26,7 +26,7 @@ BEGIN
  			WHERE d.id_dpto = new.id_dpto AND
 		  		td.cant_habitaciones < (SELECT COUNT(*) FROM gr02_habitacion h
 								  			WHERE h.id_dpto = d.id_dpto))) THEN
-		RAISE EXCEPTION 'La habitacion ya tiene el maximo de habitaciones permitidas';
+		RAISE EXCEPTION 'El departamento ya tiene el maximo de habitaciones permitidas';
 	END IF;
 RETURN new;
 END; $$ LANGUAGE plpgsql;
@@ -55,6 +55,14 @@ FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Cantidad_Habitaciones();
 CREATE TRIGGER TR_Cantidad_Habitaciones_tipo
 AFTER UPDATE OF cant_habitaciones ON gr02_tipo_dpto
 FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Cantidad_Habitaciones_Tipo();
+
+/*INSERT INTO GR02_Habitacion (id_dpto,id_habitacion,posib_camas_simples,posib_camas_dobles,posib_camas_kind,tv,sillon,frigobar,mesa,sillas,cocina)
+    VALUES(1,3,0,1,0,true,1,true,false,1,false);
+	El departamento ya tiene el maximo de habitaciones permitidas
+	Da ese error porque el id_dpto 1 es de tipo 1 y puede tener maximo 2 habitaciones y ya las tiene
+	UPDATE GR02_Habitacion SET id_dpto = 1 WHERE id_dpto = 2 and id_habitacion = 3
+	El departamento ya tiene el maximo de habitaciones permitidas
+*/
 
 ------------------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que tanto la persona que realiza la reserva como los huéspedes no sea el propietario del departamento
