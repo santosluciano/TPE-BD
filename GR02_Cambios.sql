@@ -1,5 +1,5 @@
 --Restriccion que permite que las fechas sean consistentes
-alter table gr02_reserva add constraint chk_fecha check(
+ALTER TABLE gr02_reserva add CONSTRAINT chk_fecha CHECK(
    fecha_desde < fecha_hasta
 );
 -----------------------------------------------------------------------------------------------------
@@ -12,43 +12,43 @@ FROM gr02_departamento d
  	WHERE td.cant_habitaciones < (SELECT COUNT(*) FROM gr02_habitacion h
 								  		WHERE h.id_dpto = d.id_dpto)));*/
 --Restriccion implementada
-create or replace function fn_cantidad_habitaciones() returns trigger as $$
-begin
-	if(exists (select 1
+CREATE OR REPLACE FUNCTION TRFN_GR02_cantidad_habitaciones() RETURNS trigger AS $$
+BEGIN
+	IF(EXISTS (SELECT 1
 		FROM gr02_departamento d 
  			JOIN gr02_tipo_dpto td ON (td.id_tipo_depto = d.id_tipo_depto)
- 			WHERE d.id_dpto = new.id_dpto and
+ 			WHERE d.id_dpto = new.id_dpto AND
 		  		td.cant_habitaciones < (SELECT COUNT(*) FROM gr02_habitacion h
-								  			WHERE h.id_dpto = d.id_dpto))) then
+								  			WHERE h.id_dpto = d.id_dpto))) THEN
 		raise exception 'La habitacion ya tiene el maximo de habitaciones permitidas';
-	end if;
-return new;
-end; $$ language plpgsql;
+	END IF;
+RETURN new;
+END; $$ LANGUAGE plpgsql;
 
-create or replace function fn_cantidad_habitaciones_tipo() returns trigger as $$
-begin
-	if(exists (select 1
+CREATE OR REPLACE FUNCTION TRFN_GR02_cantidad_habitaciones_tipo() RETURNS trigger AS $$
+BEGIN
+	IF(EXISTS (SELECT 1
 		FROM gr02_departamento d 
  			JOIN gr02_tipo_dpto td ON (td.id_tipo_depto = d.id_tipo_depto)
- 			WHERE d.id_tipo_depto = new.id_tipo_depto and
+ 			WHERE d.id_tipo_depto = new.id_tipo_depto AND
 		  		td.cant_habitaciones < (SELECT COUNT(*) FROM gr02_habitacion h
-								  			WHERE h.id_dpto = d.id_dpto))) then
+								  			WHERE h.id_dpto = d.id_dpto))) THEN
 		raise exception 'Hay un departamento con mas habitaciones que el maximo';
-	end if;
-return new;
-end; $$ language plpgsql;
+	END IF;
+RETURN new;
+END; $$ LANGUAGE plpgsql;
 
-create trigger TR_Cantidad_Habitaciones 
-after insert or update of id_dpto on gr02_Habitacion 
+CREATE trigger TR_Cantidad_Habitaciones 
+AFTER OR INSERT OF of id_dpto ON gr02_Habitacion 
 for each row  execute procedure fn_cantidad_habitaciones();
 
-create trigger TR_Cantidad_Habitaciones2
-after update of id_tipo_depto on gr02_Departamento
-for each row execute procedure fn_cantidad_habitaciones();
+CREATE trigger TR_Cantidad_Habitaciones2
+AFTER UPDATE OF id_tipo_depto ON gr02_Departamento
+for each ROW EXECUTE procedure fn_cantidad_habitaciones();
 
-create trigger TR_Cantidad_Habitaciones_tipo
-after update of cant_habitaciones on gr02_tipo_dpto
-for each row execute procedure fn_cantidad_habitaciones_tipo();
+CREATE trigger TR_Cantidad_Habitaciones_tipo
+AFTER UPDATE OF cant_habitaciones ON gr02_tipo_dpto
+for each ROW EXECUTE procedure fn_cantidad_habitaciones_tipo();
 
 --FALTA EN CASO DE ACTUALIZAR CANT_HABITACIONES EN TIPO_DPTO
 ------------------------------------------------------------------------------------------------
@@ -64,27 +64,27 @@ CHECK (NOT EXISTS
 				 		OR (d.tipo_doc = hr.tipo_doc and d.nro_doc = hr.nro_doc))))); 
 */
 --Restriccion implementada                                       
-create or replace function fn_reserva_huespedes_no_propietarios() returns trigger as $$
-begin
-	if(exists (SELECT 1
+CREATE OR REPLACE FUNCTION TRFN_GR02_reserva_huespedes_no_propietarios() RETURNS trigger AS $$
+BEGIN
+	IF(EXISTS (SELECT 1
 				FROM gr02_reserva r 
  				LEFT JOIN gr02_huesped_reserva hr ON (hr.id_reserva = r.id_reserva)
- 				WHERE exists(select 1 
-				 				from gr02_departamento d 
-				 				where (r.id_reserva = new.id_reserva)
-							 		and(d.id_dpto = r.id_dpto) 
-							 		and ((d.tipo_doc = r.tipo_doc and d.nro_doc = r.nro_doc) 
-				 					or (d.tipo_doc = hr.tipo_doc and d.nro_doc = hr.nro_doc))))) then
+ 				WHERE EXISTS(SELECT 1 
+				 				FROM gr02_departamento d 
+				 				WHERE (r.id_reserva = new.id_reserva)
+							 		AND (d.id_dpto = r.id_dpto) 
+							 		AND ((d.tipo_doc = r.tipo_doc and d.nro_doc = r.nro_doc) 
+				 					OR (d.tipo_doc = hr.tipo_doc and d.nro_doc = hr.nro_doc))))) THEN
 		raise exception 'No se puede hacer la reserva, un huesped o el que hace la reserva es propietario';
-	end if;
-return new;
-end; $$ language plpgsql;
+	END IF;
+RETURN new;
+END; $$ LANGUAGE plpgsql;
 
-create trigger TR_reserva_no_propietario 
-after insert or update of tipo_doc, nro_doc on gr02_reserva 
+CREATE trigger TR_GR02_reserva_no_propietario 
+AFTER INSERT OR UPDATE of tipo_doc, nro_doc ON gr02_reserva 
 for each row  execute procedure fn_reserva_huespedes_no_propietarios();
 
-create trigger TR_huesped_reserva_no_propietario 
+CREATE trigger TR_GR02_huesped_reserva_no_propietario 
 after insert or update of id_reserva on gr02_huesped_reserva 
 for each row  execute procedure fn_reserva_huespedes_no_propietarios();
 
@@ -101,7 +101,7 @@ CHECK (NOT EXISTS
 								  		where hr.id_reserva = r.id_reserva)));*/
 
 --Restriccion implementada, tengo que conciderar ademas con otra funcion si cambio el tipo_depto o del depto                                       
-create or replace function fn_cantidad_huespedes() returns trigger as $$
+create or replace function TRFN_GR02_cantidad_huespedes() returns trigger as $$
 begin
 	if(exists (select r.* 
 	from gr02_reserva r
@@ -116,7 +116,7 @@ begin
 return new;
 end; $$ language plpgsql;
 
-create or replace function fn_cantidad_huespedes_max() returns trigger as $$
+create or replace function TRFN_GR02_cantidad_huespedes_max() returns trigger as $$
 begin
 	if(exists (select r.* 
 	from gr02_reserva r
@@ -131,19 +131,19 @@ begin
 return new;
 end; $$ language plpgsql;
 
-create trigger TR_Cantidad_huespedes 
+create trigger TR_GR02_Cantidad_huespedes 
 after insert or update of id_reserva on gr02_huesped_reserva 
 for each row  execute procedure fn_cantidad_huespedes();
 
-create trigger TR_Cantidad_huespedes2 
+create trigger TR_GR02_Cantidad_huespedes2 
 after update of id_dpto on gr02_reserva
 for each row  execute procedure fn_cantidad_huespedes();
 
-create trigger TR_Cantidad_huespedes_max1 
+create trigger TR_GR02_Cantidad_huespedes_max1 
 after update of id_tipo_depto on gr02_departamento
 for each row  execute procedure fn_cantidad_huespedes_max();
 
-create trigger TR_Cantidad_huespedes_max2
+create trigger TR_GR02_Cantidad_huespedes_max2
 after update of cant_max_huespedes on gr02_tipo_dpto
 for each row  execute procedure fn_cantidad_huespedes_max();
 
@@ -153,7 +153,7 @@ for each row  execute procedure fn_cantidad_huespedes_max();
 --esto es si el mismo está Ocupado o Libre.
 --Se crea una funcion que devuelve una tabla que se fija si en la fecha pasada por parametro 
 --el depto esta ocupado o no, si esta ocupado la tabla dira 'ocupado', sino 'libre'
-CREATE OR REPLACE FUNCTION Departamento_Estado (fecha DATE) 
+CREATE OR REPLACE FUNCTION FN_GR02_Departamento_Estado (fecha DATE) 
 	RETURNS TABLE ( id_dpto INTEGER, estado VARCHAR ) 
 	AS $$
 	DECLARE
@@ -176,9 +176,9 @@ CREATE OR REPLACE FUNCTION Departamento_Estado (fecha DATE)
  END LOOP;
 END; $$ LANGUAGE plpgsql;
 --Ejemplo de como llamar a la funcion
-select * from Departamento_Estado('2018-04-01');
+--select * from Departamento_Estado('2018-04-01');
 --Dada una rango de fechas y una ciudad, devuelva una lista de departamentos disponibles
-CREATE OR REPLACE FUNCTION Departamentos_disponibles (fecha_inicio DATE,fecha_fin DATE,city VARCHAR) 
+CREATE OR REPLACE FUNCTION FN_GR02_Departamentos_disponibles (fecha_inicio DATE,fecha_fin DATE,city VARCHAR) 
 	RETURNS TABLE ( id_dpto INTEGER ) 
 	AS $$
 	DECLARE
@@ -197,12 +197,23 @@ CREATE OR REPLACE FUNCTION Departamentos_disponibles (fecha_inicio DATE,fecha_fi
  END LOOP;
 END; $$ LANGUAGE plpgsql;
 --Ejemplo de como llamar a la funcion
-select * from Departamentos_disponibles('2018-02-02','2018-06-05','Mar del Plata');
+--select * from Departamentos_disponibles('2018-02-02','2018-06-05','Mar del Plata');
 --se coloca la fecha_inicio, fecha_hasta, ciudad
 -------------------------------------------------------------------------------------------------
 --VISTAS
+--Devuelva un listado de todos los departamentos del sistema junto con la recaudación 
+--de los mismos en los últimos 6 meses.
+CREATE VIEW V_GR02_DEPTO_RECAUDACION_6_MESES AS
+	SELECT d.*,SUM(p.importe) as recaudacion  
+		FROM GR02_Departamento d
+		LEFT JOIN GR02_Reserva r 
+			ON (r.id_dpto = d.id_dpto)
+		LEFT JOIN GR02_Pago p 
+			ON (p.id_reserva = r.id_reserva AND p.fecha_pago >= current_date - interval '6 month')
+		GROUP BY d.id_dpto
+		ORDER BY d.id_dpto
 --Devuelve un listado con los departamentos ordenados por ciudad y por mejor rating (estrellas)
-CREATE VIEW DEPTO_CIUDAD_RATING  AS
+CREATE VIEW V_GR02_DEPTO_CIUDAD_RATING  AS
   SELECT d.*,avg(c.estrellas) as rating
 	FROM GR02_Departamento d
 	JOIN GR02_Reserva r ON (r.id_dpto = d.id_dpto)
