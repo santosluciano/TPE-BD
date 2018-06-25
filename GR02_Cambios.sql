@@ -93,7 +93,7 @@ BEGIN
 							 		AND (d.id_dpto = r.id_dpto) 
 							 		AND ((d.tipo_doc = r.tipo_doc AND d.nro_doc = r.nro_doc) 
 				 					OR (d.tipo_doc = hr.tipo_doc AND d.nro_doc = hr.nro_doc))))) THEN
-		RAISE EXCEPTION 'No se puede hacer la reserva, un huesped o el que hace la reserva es propietario';
+		RAISE EXCEPTION 'Huesped es propietario';
 	END IF;
 RETURN new;
 END; $$ LANGUAGE plpgsql;
@@ -107,9 +107,15 @@ AFTER INSERT OR UPDATE OF id_reserva ON gr02_huesped_reserva
 FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Reserva_Huespedes_No_Propietarios();
 /*INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
     VALUES(8,'2017-12-01','2018-07-01','2018-08-01','Telefonica',1,800,1,1,36626800);
-	No se puede hacer la reserva, un huesped o el que hace la reserva es propietario
+	Huesped es propietario
 	Da ese error porque el huesped que intenta hacer la reserva es el propietario del depto con id_dpto 1
-	
+	UPDATE GR02_Reserva SET nro_doc = 36626800 WHERE id_reserva = 1
+	Huesped es propietario
+	El huesped con el nro_doc 36626800 no puede ser el que hizo la reserva porque es el propietario de ese departamento
+	INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva)
+		VALUES(1,22334502,4)
+	Huesped es propietario
+	Da ese error porque el huesped que se quiere agregar a la reserva es el propietario del departamento de esa reserva
 */
 -----------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que la cantidad de huespedes no exceda la cantidad maxima del departamento
@@ -173,7 +179,28 @@ FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Cantidad_Huespedes_Max();
 CREATE TRIGGER TR_GR02_Cantidad_Huespedes_Max2
 AFTER UPDATE OF cant_max_huespedes on gr02_tipo_dpto
 FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Cantidad_Huespedes_Max();
-
+/*INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva)
+	VALUES(1,22334502,7)
+	La cantidad de huespedes excede el maximo de la habitacion
+	La reserva ya tiene dos huespedes y el maximo de ese departamento es 2
+	UPDATE GR02_Huesped_Reserva SET id_reserva = 7 WHERE id_reserva = 2 and nro_doc = 32243466
+	La cantidad de huespedes excede el maximo de la habitacion
+	Se quiere pasar un huesped de la reserva 2 a la 7 pero como la reserva 7 ya tiene el maximo permitido tira el error
+	UPDATE GR02_Reserva SET id_dpto = 5 WHERE id_reserva = 1
+	La cantidad de huespedes excede el maximo de la habitacion
+	Se quiere cambiar el depto pero como la reserva 1 tiene 4 huespedes y el dpto 5 acepta maximo 2 tira la excepcion
+	UPDATE GR02_Departamento SET id_tipo_depto = 1 WHERE id_dpto = 5
+	INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva)
+		VALUES(1,22334502,5)
+	UPDATE GR02_Departamento SET id_tipo_depto = 5 WHERE id_dpto = 5
+	Se actualiza el tipo del dpto 5 que acepta 4 huespedes, se agrega un huesped a la reserva y se le quiere volver
+	a poner el tipo 5 pero como el mismo acepta 2 huespedes ya no lo deja el dbms
+	La cantidad de huespedes de una reserva excede el maximo
+	UPDATE GR02_Tipo_Dpto SET cant_max_huespedes = 2 WHERE id_tipo_depto = 1
+	La cantidad de huespedes de una reserva excede el maximo
+	Como una reserva para un departamento de ese tipo tiene mas de 2 huespedes, 
+	tira una excepcion al querer ponerle que el maximo es 2 
+*/
 -------------------------------------------------------------------------------------------------
 --SERVICIOS
 --Por cada departamento en el sistema, de el estado en una fecha determinada, 
@@ -204,7 +231,7 @@ CREATE OR REPLACE FUNCTION FN_GR02_Departamento_Estado (fecha DATE)
  END LOOP;
 END; $$ LANGUAGE plpgsql;
 --Ejemplo de como llamar a la funcion
---select * from Departamento_Estado('2018-04-01');
+--select * from FN_GR02_Departamento_Estado('2018-04-01');
 --Dada una rango de fechas y una ciudad, devuelva una lista de departamentos disponibles
 CREATE OR REPLACE FUNCTION FN_GR02_Departamentos_Disponibles (fecha_inicio DATE,fecha_fin DATE,city VARCHAR) 
 	RETURNS TABLE ( id_dpto INTEGER ) 
@@ -226,9 +253,9 @@ CREATE OR REPLACE FUNCTION FN_GR02_Departamentos_Disponibles (fecha_inicio DATE,
      			id_dpto := consulta.id_dpto ; 
         RETURN NEXT;
  END LOOP;
-END; $$ LANGUAGE plpgsql;
+END; $$ LANGUAGE plpgsql;	
 --Ejemplo de como llamar a la funcion
---select * from Departamentos_Disponibles('2018-02-02','2018-06-05','Mar del Plata');
+--select * from FN_GR02_Departamentos_Disponibles('2018-02-02','2018-02-08','Mar del Plata');
 --se coloca la fecha_inicio, fecha_hasta, ciudad
 -------------------------------------------------------------------------------------------------
 --VISTAS
@@ -244,6 +271,7 @@ CREATE VIEW V_GR02_DEPTO_RECAUDACION_6_MESES AS
 				AND p.fecha_pago >= current_date - interval '6 month')
 		GROUP BY d.id_dpto
 		ORDER BY d.id_dpto;
+--select * from V_GR02_DEPTO_RECAUDACION_6_MESES;
 --Devuelve un listado con los departamentos ordenados por ciudad y por mejor rating (estrellas)
 CREATE VIEW V_GR02_DEPTO_CIUDAD_RATING  AS
   SELECT d.*,avg(c.estrellas) AS rating
@@ -256,4 +284,4 @@ CREATE VIEW V_GR02_DEPTO_CIUDAD_RATING  AS
 		ON (c.id_reserva = hr.id_reserva)
 	GROUP BY d.id_dpto	
 	ORDER BY ciudad,rating desc;
-
+--select * from V_GR02_DEPTO_CIUDAD_RATING;
