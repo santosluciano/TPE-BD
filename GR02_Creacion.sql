@@ -242,6 +242,14 @@ ALTER TABLE GR02_Persona ADD CONSTRAINT FK_GR02_Persona_Tipo_Doc
     INITIALLY IMMEDIATE
 ;
 
+--Indices
+CREATE INDEX IDX_GR02_Departamento
+    ON GR02_Departamento ( ciudad );
+CREATE INDEX IDX_GR02_Pago
+    ON GR02_Pago ( id_reserva );
+CREATE INDEX IDX_GR02_Reserva_Departamento
+    ON GR02_Reserva ( id_dpto );
+
 
 --Insertar Datos
 --Tipos Documentos GR02_Tipo_Doc
