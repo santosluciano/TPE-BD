@@ -103,7 +103,7 @@ AFTER INSERT OR UPDATE OF tipo_doc, nro_doc ON gr02_reserva
 FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Reserva_Huespedes_No_Propietarios();
 
 CREATE TRIGGER TR_GR02_Huesped_Reserva_No_Propietario 
-AFTER INSERT OR UPDATE OF id_reserva ON gr02_huesped_reserva 
+AFTER INSERT OR UPDATE ON gr02_huesped_reserva 
 FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Reserva_Huespedes_No_Propietarios();
 /*INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
     VALUES(8,'2017-12-01','2018-07-01','2018-08-01','Telefonica',1,800,1,1,36626800);
@@ -116,6 +116,9 @@ FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Reserva_Huespedes_No_Propietarios();
 		VALUES(1,22334502,4)
 	Huesped es propietario
 	Da ese error porque el huesped que se quiere agregar a la reserva es el propietario del departamento de esa reserva
+	UPDATE gr02_huesped_reserva SET nro_doc = 19243466 WHERE id_reserva = 6 AND nro_doc = 26243466
+	Huesped es propietario
+	Ese error se debe a que se quiere actualizar el huesped que hizo la reserva y el que se quiere colocar ya es propietario
 */
 -----------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que la cantidad de huespedes no exceda la cantidad maxima del departamento
