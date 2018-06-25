@@ -7,4 +7,4 @@
     protected $model;
   }
 
- ?>
+?>

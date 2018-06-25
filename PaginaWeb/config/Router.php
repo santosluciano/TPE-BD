@@ -1,7 +1,4 @@
 <?php
-  /**
-   *
-   */
   class Router
   {
     private $routes;
@@ -17,15 +14,10 @@
       $this->routes[] = [$url, $verb, $controller, $method];
     }
 
-    /**
-    * Given an URL pottern like "tarea/:id"
-    * return if it matcher $url like "tarea/12"
-    * and store 12 in a url params associated with ":id"
-    */
     private function matchURL($route_url, $url)
     {
       $urlExploded = explode('/', trim($url,'/'));
-      $route_urlExploded = explode('/', trim($route_url,'/'));  
+      $route_urlExploded = explode('/', trim($route_url,'/'));
       if(sizeof($urlExploded) != sizeof($route_urlExploded))
         return false;
       $this->params = [];
@@ -37,6 +29,7 @@
             return false;
       return true;
     }
+
     public function Route($url)
     {
       foreach ($this->routes as  $route) {
@@ -48,9 +41,7 @@
           $metodo = $route[3];
           return [ $controller, $metodo, $this->params];
         }
-
       }
     }
   }
-
 ?>
