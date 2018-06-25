@@ -149,6 +149,38 @@ for each row  execute procedure fn_cantidad_huespedes_max();
 
 -------------------------------------------------------------------------------------------------
 --SERVICIOS
+--Por cada departamento en el sistema, de el estado en una fecha determinada, 
+--esto es si el mismo está Ocupado o Libre.
+--Se crea una funcion que devuelve una tabla que se fija si en la fecha pasada por parametro 
+--el depto esta ocupado o no, si esta ocupado la tabla dira 'ocupado', sino 'libre'
+CREATE OR REPLACE FUNCTION Departamento_Estado (fecha DATE) 
+	RETURNS TABLE ( id_dpto INTEGER, estado VARCHAR ) 
+	AS $$
+	DECLARE
+		consulta RECORD;
+	BEGIN
+ 		FOR consulta IN(
+			SELECT d.id_dpto 
+				FROM gr02_departamento d)  
+ 		LOOP
+			IF exists(SELECT 1 
+					  	FROM gr02_departamento d
+						JOIN gr02_reserva r ON (r.id_dpto = d.id_dpto)
+						WHERE d.id_dpto = consulta.id_dpto and fecha BETWEEN fecha_desde AND fecha_hasta) THEN
+     			id_dpto := consulta.id_dpto ; 
+    			estado := 'ocupado';
+			ELSE
+				id_dpto := consulta.id_dpto ; 
+    			estado := 'disponible';
+			END IF;
+        RETURN NEXT;
+ END LOOP;
+ --RETURN QUERY SELECT  nombre,  apellido
+ --FROM  voluntario
+ --WHERE  apellido ILIKE patron;
+END; $$ LANGUAGE plpgsql;
+--Ejemplo de como llamar a la funcion
+select * from Departamento_Estado('2018-04-01');
 
 -------------------------------------------------------------------------------------------------
 --VISTAS
