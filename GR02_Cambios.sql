@@ -1,7 +1,13 @@
---Restriccion que permite que las fechas sean consistentes
+--Restriccion que permite que las fechas de reserva sean consistentes
 ALTER TABLE gr02_reserva ADD CONSTRAINT chk_fecha CHECK(
    fecha_desde < fecha_hasta
 );
+--INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
+--    VALUES(8,'2017-12-01','2018-07-01','2018-04-01','Telefonica',1,800,1,1,26243466);
+--el nuevo registro para la relación «gr02_reserva» viola la restricción «check» «chk_fecha»
+--UPDATE GR02_Reserva SET fecha_desde = '2018-02-02' WHERE id_reserva = 1
+--el nuevo registro para la relación «gr02_reserva» viola la restricción «check» «chk_fecha»
+
 -----------------------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que un depto no tenga mas habitaciones que las que permite el mismo
 /*CREATE ASSERTION CK_Cantidad_Habitaciones
@@ -39,7 +45,7 @@ RETURN new;
 END; $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER TR_Cantidad_Habitaciones 
-AFTER OR INSERT OF of id_dpto ON gr02_Habitacion 
+AFTER INSERT OR UPDATE OF id_dpto ON gr02_Habitacion 
 FOR EACH ROW  EXECUTE PROCEDURE TRFN_GR02_Cantidad_Habitaciones();
 
 CREATE TRIGGER TR_Cantidad_Habitaciones2
@@ -219,7 +225,7 @@ CREATE VIEW V_GR02_DEPTO_RECAUDACION_6_MESES AS
 			ON (p.id_reserva = r.id_reserva 
 				AND p.fecha_pago >= current_date - interval '6 month')
 		GROUP BY d.id_dpto
-		ORDER BY d.id_dpto
+		ORDER BY d.id_dpto;
 --Devuelve un listado con los departamentos ordenados por ciudad y por mejor rating (estrellas)
 CREATE VIEW V_GR02_DEPTO_CIUDAD_RATING  AS
   SELECT d.*,avg(c.estrellas) AS rating
@@ -231,5 +237,5 @@ CREATE VIEW V_GR02_DEPTO_CIUDAD_RATING  AS
 	JOIN GR02_Comentario c 
 		ON (c.id_reserva = hr.id_reserva)
 	GROUP BY d.id_dpto	
-	ORDER BY ciudad,rating desc
+	ORDER BY ciudad,rating desc;
 
