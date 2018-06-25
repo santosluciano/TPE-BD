@@ -369,17 +369,17 @@ INSERT INTO GR02_Huesped(tipo_doc, nro_doc)
 INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
     VALUES(1,'2017-12-01','2018-01-01','2018-02-01','Telefonica',1,800,1,1,26243466);
 INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
-    VALUES(2,'2017-12-21','2018-01-01','2018-02-01','Personal',1,1000,0,1,22334502);
+    VALUES(2,'2017-12-21','2018-01-01','2018-02-01','Personal',2,1000,0,1,22334502);
 INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
-    VALUES(3,'2017-12-11','2018-01-01','2018-02-01','Telefonica',1,1000,1,1,36328314);
+    VALUES(3,'2017-12-11','2018-01-01','2018-02-01','Telefonica',3,1000,1,1,36328314);
 INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
-    VALUES(4,'2017-11-07','2018-01-01','2018-02-01','E-Mail',1,1200,1,1,16713110);
+    VALUES(4,'2017-11-07','2018-01-01','2018-02-01','E-Mail',4,1200,1,1,16713110);
 INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
-    VALUES(5,'2017-12-08','2018-01-01','2018-02-01','E-mail',1,600,0,1,36626800);
+    VALUES(5,'2017-12-08','2018-01-01','2018-02-01','E-mail',5,600,0,1,36626800);
 INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
-    VALUES(6,'2017-12-08','2018-01-01','2018-02-01','E-mail',1,700,0,1,32243466);
+    VALUES(6,'2017-12-08','2018-01-01','2018-02-01','E-mail',6,700,0,1,32243466);
 INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
-    VALUES(7,'2018-01-08','2018-02-05','2018-04-01','Telefonica',1,700,0,1,19243466);
+    VALUES(7,'2018-01-08','2018-02-05','2018-04-01','Telefonica',6,700,0,1,19243466);
 --Estado luego de la ocupacion de la reserva GR02_Estado_Luego_Ocupacion_Reserva
 INSERT INTO GR02_Estado_Luego_Ocupacion_Reserva(fecha, id_reserva,comentario) 
     VALUES(1,1,'En buen estado todo');

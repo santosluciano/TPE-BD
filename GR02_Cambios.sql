@@ -105,7 +105,12 @@ FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Reserva_Huespedes_No_Propietarios();
 CREATE TRIGGER TR_GR02_Huesped_Reserva_No_Propietario 
 AFTER INSERT OR UPDATE OF id_reserva ON gr02_huesped_reserva 
 FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Reserva_Huespedes_No_Propietarios();
-
+/*INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
+    VALUES(8,'2017-12-01','2018-07-01','2018-08-01','Telefonica',1,800,1,1,36626800);
+	No se puede hacer la reserva, un huesped o el que hace la reserva es propietario
+	Da ese error porque el huesped que intenta hacer la reserva es el propietario del depto con id_dpto 1
+	
+*/
 -----------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que la cantidad de huespedes no exceda la cantidad maxima del departamento
 /*CREATE ASSERTION CK_Cantidad_Huespedes
