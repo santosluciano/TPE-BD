@@ -174,13 +174,31 @@ CREATE OR REPLACE FUNCTION Departamento_Estado (fecha DATE)
 			END IF;
         RETURN NEXT;
  END LOOP;
- --RETURN QUERY SELECT  nombre,  apellido
- --FROM  voluntario
- --WHERE  apellido ILIKE patron;
 END; $$ LANGUAGE plpgsql;
 --Ejemplo de como llamar a la funcion
 select * from Departamento_Estado('2018-04-01');
-
+--Dada una rango de fechas y una ciudad, devuelva una lista de departamentos disponibles
+CREATE OR REPLACE FUNCTION Departamentos_disponibles (fecha_inicio DATE,fecha_fin DATE,city VARCHAR) 
+	RETURNS TABLE ( id_dpto INTEGER ) 
+	AS $$
+	DECLARE
+		consulta RECORD;
+	BEGIN
+ 		FOR consulta IN(
+			SELECT d.id_dpto 
+				FROM gr02_departamento d
+				WHERE d.ciudad LIKE city AND  
+					NOT EXISTS(SELECT 1
+							   	FROM GR02_Reserva r 
+							   	WHERE r.id_dpto = d.id_dpto AND (r.fecha_desde BETWEEN fecha_inicio AND fecha_fin) OR (r.fecha_hasta BETWEEN fecha_inicio AND fecha_fin)))  
+ 		LOOP
+     			id_dpto := consulta.id_dpto ; 
+        RETURN NEXT;
+ END LOOP;
+END; $$ LANGUAGE plpgsql;
+--Ejemplo de como llamar a la funcion
+select * from Departamentos_disponibles('2018-02-02','2018-06-05','Mar del Plata');
+--se coloca la fecha_inicio, fecha_hasta, ciudad
 -------------------------------------------------------------------------------------------------
 --VISTAS
 --Devuelve un listado con los departamentos ordenados por ciudad y por mejor rating (estrellas)
