@@ -164,9 +164,8 @@ CREATE OR REPLACE FUNCTION Departamento_Estado (fecha DATE)
 				FROM gr02_departamento d)  
  		LOOP
 			IF exists(SELECT 1 
-					  	FROM gr02_departamento d
-						JOIN gr02_reserva r ON (r.id_dpto = d.id_dpto)
-						WHERE d.id_dpto = consulta.id_dpto and fecha BETWEEN fecha_desde AND fecha_hasta) THEN
+					  	FROM gr02_reserva r
+						WHERE consulta.id_dpto = r.id_dpto and fecha BETWEEN fecha_desde AND fecha_hasta) THEN
      			id_dpto := consulta.id_dpto ; 
     			estado := 'ocupado';
 			ELSE
