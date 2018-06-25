@@ -29,7 +29,7 @@ CREATE TABLE GR02_Departamento (
     nro_doc decimal(11,0)  NOT NULL,
     precio_noche decimal(10,2)  NOT NULL,
     costo_limpieza decimal(10,2)  NOT NULL,
-    ciudad varchar(80) NOT NULL,
+    ciudad varchar(80) NOT NULL, --se agrego la columna ciudad, para saber de donde ese el dpto
     CONSTRAINT PK_GR02_Departamento PRIMARY KEY (id_dpto)
 );
 
@@ -273,17 +273,29 @@ INSERT INTO GR02_Persona(tipo_doc, nro_doc, apellido, nombre, fecha_nac, e_mail)
     Values(1, 22334502, 'Rodriguez', 'Esteba', '1972-03-11', 'estebanquito@gmail.com');
 INSERT INTO GR02_Persona(tipo_doc, nro_doc, apellido, nombre, fecha_nac, e_mail) 
     Values(1, 26243466, 'Lescano', 'Pablo', '1977-12-08', 'pablitolescano@gmail.com');
+INSERT INTO GR02_Persona(tipo_doc, nro_doc, apellido, nombre, fecha_nac, e_mail) 
+    Values(1, 28343466, 'Rodriguez', 'Ariel', '1980-12-08', 'arielrodriguez@gmail.com');
+INSERT INTO GR02_Persona(tipo_doc, nro_doc, apellido, nombre, fecha_nac, e_mail) 
+    Values(1, 30243466, 'Ronaldo', 'Cristiano', '1983-12-08', 'cr7@gmail.com');
+INSERT INTO GR02_Persona(tipo_doc, nro_doc, apellido, nombre, fecha_nac, e_mail) 
+    Values(1, 32243466, 'Messi', 'Lionel', '1985-9-08', 'pulga@gmail.com');
+INSERT INTO GR02_Persona(tipo_doc, nro_doc, apellido, nombre, fecha_nac, e_mail) 
+    Values(1, 24243466, 'Lima', 'Carlos', '1975-12-08', 'limado@gmail.com');
+INSERT INTO GR02_Persona(tipo_doc, nro_doc, apellido, nombre, fecha_nac, e_mail) 
+    Values(1, 19243466, 'Granado', 'Sandro', '1970-12-08', 'sangrana@gmail.com');       
 --Departamentos GR02_Departamento
-INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
+INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza,ciudad) 
     VALUES(1,'Linda vista al mar',50,1,1,36626800,800,100,'Mar del Plata');
-INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
+INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza,ciudad) 
     VALUES(2,'Habitaciones grandes',90,2,1,36328314,1000,150,'Bariloche');
-INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
+INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza,ciudad) 
     VALUES(3,'Cocina moderna',80,3,1,16713110,1000,150,'Villa San Carlos');
-INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
+INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza,ciudad) 
     VALUES(4,'Comedor grande',120,4,1,22334502,1200,200,'Misiones');
-INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza) 
-    VALUES(5,'Ideal para estudiantes',40,5,1,26243466,600,70,'Caracas');
+INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza,ciudad) 
+    VALUES(5,'Ideal para estudiantes',40,5,1,26243466,600,70,'Mendoza');
+INSERT INTO GR02_Departamento (id_dpto,descripcion,superficie,id_tipo_depto,tipo_doc,nro_doc,precio_noche,costo_limpieza,ciudad) 
+    VALUES(6,'Hermosa vista',40,5,1,19243466,700,80,'Mar del Plata');
 --Habitaciones GR02_Habitacion
 --Habitaciones Departamento 1
 INSERT INTO GR02_Habitacion (id_dpto,id_habitacion,posib_camas_simples,posib_camas_dobles,posib_camas_kind,tv,sillon,frigobar,mesa,sillas,cocina)
@@ -315,18 +327,23 @@ INSERT INTO GR02_Habitacion (id_dpto,id_habitacion,posib_camas_simples,posib_cam
     VALUES(4,4,0,0,0,true,2,true,true,8,true);
 --Habitaciones Departamento 5
 INSERT INTO GR02_Habitacion (id_dpto,id_habitacion,posib_camas_simples,posib_camas_dobles,posib_camas_kind,tv,sillon,frigobar,mesa,sillas,cocina)
-    VALUES(5,1,2,0,0,true,1,false,true,3,true);    
+    VALUES(5,1,2,0,0,true,1,false,true,3,true);   
+--Habitaciones Departamento 6 
+INSERT INTO GR02_Habitacion (id_dpto,id_habitacion,posib_camas_simples,posib_camas_dobles,posib_camas_kind,tv,sillon,frigobar,mesa,sillas,cocina)
+    VALUES(6,1,2,0,0,true,1,false,true,3,true);  
 --Costos Departamentos GR02_Costo_Depto
 INSERT INTO GR02_Costo_Depto (id_dpto,fecha_desde,fecha_hasta,precio_noche)
-    VALUES(1,'2018-01-01','2018-02-01',800);
+    VALUES(1,'2018-01-01','2018-12-01',800);
 INSERT INTO GR02_Costo_Depto (id_dpto,fecha_desde,fecha_hasta,precio_noche)
-    VALUES(2,'2018-01-01','2018-02-01',1000);
+    VALUES(2,'2018-01-01','2018-12-01',1000);
 INSERT INTO GR02_Costo_Depto (id_dpto,fecha_desde,fecha_hasta,precio_noche)
-    VALUES(3,'2018-01-01','2018-02-01',1000);
+    VALUES(3,'2018-01-01','2018-12-01',1000);
 INSERT INTO GR02_Costo_Depto (id_dpto,fecha_desde,fecha_hasta,precio_noche)
-    VALUES(4,'2018-01-01','2018-02-01',1200);
+    VALUES(4,'2018-01-01','2018-12-01',1200);
 INSERT INTO GR02_Costo_Depto (id_dpto,fecha_desde,fecha_hasta,precio_noche)
-    VALUES(5,'2018-01-01','2018-02-01',600);            
+    VALUES(5,'2018-01-01','2018-12-01',600);     
+INSERT INTO GR02_Costo_Depto (id_dpto,fecha_desde,fecha_hasta,precio_noche)
+    VALUES(6,'2018-01-01','2018-12-01',700);            
 --Huespedes GR02_Huesped
 INSERT INTO GR02_Huesped(tipo_doc, nro_doc) 
     VALUES(1, 36626800);
@@ -338,6 +355,16 @@ INSERT INTO GR02_Huesped(tipo_doc, nro_doc)
     VALUES(1, 22334502);
 INSERT INTO GR02_Huesped(tipo_doc, nro_doc) 
     VALUES(1, 26243466);
+INSERT INTO GR02_Huesped(tipo_doc, nro_doc) 
+    VALUES(1, 28343466);
+INSERT INTO GR02_Huesped(tipo_doc, nro_doc) 
+    VALUES(1, 30243466);
+INSERT INTO GR02_Huesped(tipo_doc, nro_doc) 
+    VALUES(1, 32243466);
+INSERT INTO GR02_Huesped(tipo_doc, nro_doc) 
+    VALUES(1, 24243466);
+INSERT INTO GR02_Huesped(tipo_doc, nro_doc) 
+    VALUES(1, 19243466);
 --Reservas GR02_Reserva
 INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
     VALUES(1,'2017-12-01','2018-01-01','2018-02-01','Telefonica',1,800,1,1,26243466);
@@ -349,6 +376,10 @@ INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,i
     VALUES(4,'2017-11-07','2018-01-01','2018-02-01','E-Mail',1,1200,1,1,16713110);
 INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
     VALUES(5,'2017-12-08','2018-01-01','2018-02-01','E-mail',1,600,0,1,36626800);
+INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
+    VALUES(6,'2017-12-08','2018-01-01','2018-02-01','E-mail',1,700,0,1,32243466);
+INSERT INTO GR02_Reserva(id_reserva,fecha_reserva,fecha_desde,fecha_hasta,tipo,id_dpto,valor_noche,usa_limpieza,tipo_doc,nro_doc)
+    VALUES(7,'2018-01-08','2018-02-05','2018-04-01','Telefonica',1,700,0,1,19243466);
 --Estado luego de la ocupacion de la reserva GR02_Estado_Luego_Ocupacion_Reserva
 INSERT INTO GR02_Estado_Luego_Ocupacion_Reserva(fecha, id_reserva,comentario) 
     VALUES(1,1,'En buen estado todo');
@@ -360,17 +391,42 @@ INSERT INTO GR02_Estado_Luego_Ocupacion_Reserva(fecha, id_reserva,comentario)
     VALUES(1,4,'Limpio pero con una lamparita quemada');
 INSERT INTO GR02_Estado_Luego_Ocupacion_Reserva(fecha, id_reserva,comentario) 
     VALUES(1,5,'Silla rota y Mesa con desgaste');
+INSERT INTO GR02_Estado_Luego_Ocupacion_Reserva(fecha, id_reserva,comentario) 
+    VALUES(1,6,'Todo en orden');
+INSERT INTO GR02_Estado_Luego_Ocupacion_Reserva(fecha, id_reserva,comentario) 
+    VALUES(1,7,'Impecable y limpio');
 --Huesped Reserva GR02_Huesped_Reserva
+--19243466 ,24243466,32243466,28343466
 INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
     VALUES(1,26243466,1);
 INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,19243466,1);
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,24243466,1);
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,28343466,1);
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
     VALUES(1,22334502,2);
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,28343466,2);
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,32243466,2);
 INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
     VALUES(1,36328314,3);
 INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
     VALUES(1,16713110,4);
 INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
-    VALUES(1,36626800,5);                
+    VALUES(1,36626800,5);
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,28343466,5);                    
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,28343466,6);
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,24243466,6);                    
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,19243466,7);
+INSERT INTO GR02_Huesped_Reserva(tipo_doc,nro_doc,id_reserva) 
+    VALUES(1,28343466,7);                    
 --Comentarios GR02_Comentario
 INSERT INTO GR02_Comentario(tipo_doc,nro_doc,id_reserva,fecha_hora_comentario,comentario,estrellas)
     VALUES(1,26243466,1,'2018-02-05','Muy linda vista, estoy muy conforme',5);                
@@ -382,6 +438,10 @@ INSERT INTO GR02_Comentario(tipo_doc,nro_doc,id_reserva,fecha_hora_comentario,co
     VALUES(1,16713110,4,'2018-03-01','Grande y lindo',4);
 INSERT INTO GR02_Comentario(tipo_doc,nro_doc,id_reserva,fecha_hora_comentario,comentario,estrellas)
     VALUES(1,36626800,5,'2018-03-11','Muy poco espacio y mala calidad de las cosas',2);
+INSERT INTO GR02_Comentario(tipo_doc,nro_doc,id_reserva,fecha_hora_comentario,comentario,estrellas)
+    VALUES(1,28343466,6,'2018-03-11','Muy lindo',5);
+INSERT INTO GR02_Comentario(tipo_doc,nro_doc,id_reserva,fecha_hora_comentario,comentario,estrellas)
+    VALUES(1,19243466,7,'2018-12-11','Me gusto',4);
 --Pagos GR02_Pago
 INSERT INTO GR02_Pago(fecha_pago,id_reserva,id_tipo_pago,comentario,importe)
     VALUES('2018-01-01',1,1,'Se abono la totalidad',800);
@@ -392,6 +452,10 @@ INSERT INTO GR02_Pago(fecha_pago,id_reserva,id_tipo_pago,comentario,importe)
 INSERT INTO GR02_Pago(fecha_pago,id_reserva,id_tipo_pago,comentario,importe)
     VALUES('2018-01-01',4,3,'',1200);
 INSERT INTO GR02_Pago(fecha_pago,id_reserva,id_tipo_pago,comentario,importe)
-    VALUES('2018-01-01',5,4,'',600);                
+    VALUES('2018-01-01',5,4,'',600);
+INSERT INTO GR02_Pago(fecha_pago,id_reserva,id_tipo_pago,comentario,importe)
+    VALUES('2018-01-01',6,4,'',700);
+INSERT INTO GR02_Pago(fecha_pago,id_reserva,id_tipo_pago,comentario,importe)
+    VALUES('2018-02-06',7,4,'',700);                
 -- End of file.
 
