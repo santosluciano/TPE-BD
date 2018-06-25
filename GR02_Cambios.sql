@@ -62,8 +62,13 @@ FOR EACH ROW EXECUTE PROCEDURE TRFN_GR02_Cantidad_Habitaciones_Tipo();
 	Da ese error porque el id_dpto 1 es de tipo 1 y puede tener maximo 2 habitaciones y ya las tiene
 	UPDATE GR02_Habitacion SET id_dpto = 1 WHERE id_dpto = 2 and id_habitacion = 3
 	El departamento ya tiene el maximo de habitaciones permitidas
+	UPDATE GR02_Departamento SET id_tipo_depto = 5 WHERE id_dpto = 1
+	El departamento ya tiene el maximo de habitaciones permitidas
+	Da ese error porque se quiere cambiar el tipo de departamento a uno que tiene 1 habitacion y el dpto ya tiene 2 habitaciones asociadas	
+	UPDATE GR02_Tipo_Dpto SET cant_habitaciones = 1 WHERE id_tipo_depto = 1
+	Hay un departamento con mas habitaciones que el maximo
+	Da ese error porque se le quiere poner al id_tipo_depto 1, 1 sola habitacion y ya hay un depto que tiene 2 habitaciones asociadas
 */
-
 ------------------------------------------------------------------------------------------------
 --Restriccion declarativa que controla que tanto la persona que realiza la reserva como los huéspedes no sea el propietario del departamento
 /*CREATE ASSERTION CK_Cantidad_Habitaciones
