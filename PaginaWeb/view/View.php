@@ -8,7 +8,7 @@
     function __construct()
     {
       $this->smarty = new smarty();
-      $this->smarty->assign('titulo', 'Berna Deco');
+      $this->smarty->assign('titulo', 'Gestor hotelero');
       $this->smarty->assign('base_sitio', HOME);
     }
   }

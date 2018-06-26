@@ -11,10 +11,10 @@
 				<!-- SIDEBAR USER TITLE -->
 				<div class="profile-usertitle">
 					<div class="profile-usertitle-name">
-						Trabajo Practico Especial
+						Reservas de Departamentos Premiun
 					</div>
 					<div class="profile-usertitle-job">
-						Basse de Datos
+						Gestión de servicios de hospedaje
 					</div>
 				</div>
 				<!-- END SIDEBAR USER TITLE -->
