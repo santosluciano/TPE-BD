@@ -24,14 +24,11 @@
       return $departamento;
     }
 
-    public function getEstadoDpto($values){
+    public function getEstado($fecha, $dpto){
 
-      $salida = $this->db->prepare("SELECT fecha_desde, fecha_hasta
-      FROM gr02_reserva
-      WHERE id_dpto = ?
-        AND ((fecha_desde >= ? OR fecha_hasta < ?) OR (fecha_desde <= ? AND fecha_hasta >= ?))");
-      $salida->execute($values);
-      return $salida->fetchAll(PDO::FETCH_ASSOC);
+      $salida = $this->db->prepare("SELECT * FROM FN_GR02_Departamento_Estado(?) WHERE id_dpto=?");
+      $salida->execute([$fecha, $dpto]);
+      return $salida->fetch();
     }
   }
 ?>

@@ -23,5 +23,11 @@
       $this->smarty->display('templates/fechas.tpl');
     }
 
+    public function showResultado($estadoFechas)
+    {
+      $this->smarty->assign('estadoFechas', $estadoFechas);
+      $this->smarty->display('templates/resultadoFechas.tpl');
+    }
+
   }
  ?>

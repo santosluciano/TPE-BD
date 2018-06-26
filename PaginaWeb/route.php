@@ -15,9 +15,7 @@
   $router->AddRoute("", "GET", "BBDDController", "showHome");
   $router->AddRoute("departamentos", "GET", "BBDDController", "showDepartamentos");
   $router->AddRoute("fechas/:id", "GET", "BBDDController", "showFechas");
-
   $router->AddRoute("disponibilidad", "POST", "BBDDController", "showDisponibilidad");
-
 
   $route = $_GET['action'];
 

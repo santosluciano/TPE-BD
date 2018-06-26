@@ -36,7 +36,6 @@ $(document).ready(function(){
         })
 
         $('.buscar').on('click',function() {
-          console.log('entra');
           let id_dpto = $(this).attr('id');
           mostrarDisponibilidad(id_dpto);
         });
@@ -53,36 +52,11 @@ $(document).ready(function(){
                "success": mostrarDatos,
                "error": handleError
            });
-
-      		//ajaxMethods(data,'disponibilidad');
       	}
 
-        function mostrarDatos(data){ //ESTO ME LO PASO NICO Y AGUSTIN
-          console.log(data);
-
-          let calendario = $('#calendar').fullYearCalendar({
-            yearStart: new Date(data[2]),
-            yearEnd: new Date(data[3])
-          });
-          let diasOcupados = [];
-          for(let dia in data[1]){
-            if(data[1][dia] == 1){
-              let fecha = data[0]+'-'+dia;
-              diasOcupados.push(fecha);
-            }
-          }
-          for(let i = 0; i < diasOcupados.length; i++){
-            calendario.addHoliday({
-              type: 'publicHolidays',
-              from: diasOcupados[i],
-              to: diasOcupados[i]
-            });
-          }
+        function mostrarDatos(data){
+          $("#calendar").html(data);
         }
-
-
-
-
 
     }
 });
